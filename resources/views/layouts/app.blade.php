@@ -1,103 +1,118 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Farm Management System')</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { min-height: 100vh; }
-        .sidebar {
-            min-width: 220px;
-            max-width: 220px;
-            min-height: 100vh;
-            background: #f8f9fa;
-        }
-        .sidebar .nav-link.active {
-            background: #e9ecef;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
-<div class="d-flex">
-    <nav class="sidebar d-flex flex-column p-3">
-        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-            <span class="fs-4">Burondwa</span>
-        </a>
-        <hr>
-        <ul class="nav nav-pills flex-column mb-auto">
-            <li class="nav-item">
-                <a href="{{ route('dashboard.index') }}" class="nav-link {{ request()->routeIs('dashboard.*') ? 'active' : '' }}">Dashboard</a>
-            </li>
-            <li>
-                <a href="{{ route('inventory.index') }}" class="nav-link {{ request()->routeIs('inventory.*') ? 'active' : '' }}">Inventory</a>
-            </li>
-            <li>
-                <a href="{{ route('product.index') }}" class="nav-link {{ request()->routeIs('product.*') ? 'active' : '' }}">Product</a>
-            </li>
-        </ul>
-        <hr>
-        <div class="dropdown">
-            <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'User') }}" alt="" width="32" height="32" class="rounded-circle me-2">
-                <strong>{{ auth()->user()->name ?? 'User' }}</strong>
-            </a>
-            <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser">
-                <li><a class="dropdown-item" href="#">Profile</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button class="dropdown-item" type="submit">Logout</button>
-                    </form>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    <div class="flex-grow-1 p-4">
-        @yield('content')
-    </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'Burondwa Farm System') }}</title>
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-
-    <!-- Styles -->
-    <!-- Change this line -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <!-- Scripts -->
-    @vite(['resources/js/app.js'])
+    <title>Burondwa Farm Management System</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: #f6f7f9;
+        }
+        .sidebar {
+            min-height: 100vh;
+            background: #006907;
+            color: #fff;
+            width: 240px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        .sidebar .nav-link, .sidebar .dropdown-item {
+            color: #fff;
+        }
+        .sidebar .nav-link.active, .sidebar .nav-link:hover, .sidebar .dropdown-item:hover {
+            background: #388e3c;
+            color: #fff;
+        }
+        .sidebar .nav-link i {
+            margin-right: 8px;
+        }
+        .main-content {
+            margin-left: 240px;
+            padding: 0;
+        }
+        .top-navbar {
+            height: 60px;
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+        }
+        .brand {
+            font-weight: bold;
+            color: #e7f4e7;
+            font-size: 1.5rem;
+        }
+        .dropdown-menu {
+            min-width: 180px;
+        }
+    </style>
+    @stack('styles')
 </head>
 <body>
-    <div class="min-h-screen bg-accent-green">
-        @include('layouts.navigation')
-
-        <!-- Page Heading -->
-        @if (isset($header))
-            <header class="bg-white shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
+    <div class="sidebar d-flex flex-column p-3">
+        <div class="mb-4">
+            <span class="brand">Burondwa</span>
+        </div>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </li>
+            <li>
+                <a class="nav-link dropdown-toggle {{ request()->is('products*') ? 'active' : '' }}" data-bs-toggle="collapse" href="#productsMenu" role="button" aria-expanded="false" aria-controls="productsMenu">
+                    <i class="fas fa-box"></i> Products
+                </a>
+                <div class="collapse {{ request()->is('products*') ? 'show' : '' }}" id="productsMenu">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-3">
+                        <li><a href="{{ route('products.index') }}" class="dropdown-item">All Products</a></li>
+                        <li><a href="{{ route('products.create') }}" class="dropdown-item">Add Product</a></li>
+                        <li><a href="{{ route('product.categories.index') }}" class="dropdown-item">Categories</a></li>
+                    </ul>
                 </div>
-            </header>
-        @endif
-
-        <!-- Page Content -->
-        <main>
-            {{ $slot }}
+            </li>
+            <li>
+                <a class="nav-link dropdown-toggle {{ request()->is('inventory*') ? 'active' : '' }}" data-bs-toggle="collapse" href="#inventoryMenu" role="button" aria-expanded="false" aria-controls="inventoryMenu">
+                    <i class="fas fa-warehouse"></i> Inventory
+                </a>
+                <div class="collapse {{ request()->is('inventory*') ? 'show' : '' }}" id="inventoryMenu">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ms-3">
+                        <li><a href="{{ route('inventory.index') }}" class="dropdown-item">All Items</a></li>
+                        <li><a href="{{ route('inventory.create') }}" class="dropdown-item">Add Item</a></li>
+                        <li><a href="{{ route('inventory.categories.index') }}" class="dropdown-item">Categories</a></li>
+                        <li><a href="{{ route('inventory.suppliers.index') }}" class="dropdown-item">Suppliers</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <div class="top-navbar">
+            <div></div>
+            <div>
+                <span class="me-3">{{ Auth::user()->name ?? 'User' }}</span>
+                <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                    @csrf
+                    <button type="submit" class="btn btn-link text-danger p-0"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </form>
+            </div>
+        </div>
+        <main class="py-4 px-4">
+            @yield('content')
         </main>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    @stack('scripts')
 </body>
 </html>

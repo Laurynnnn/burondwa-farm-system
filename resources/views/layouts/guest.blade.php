@@ -5,31 +5,23 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Burondwa Farm System') }}</title>
+        <title>{{ config('app.name', 'Farm Management System') }}</title>
 
         <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
         <!-- Styles -->
-        <!-- Change this line -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
         <!-- Scripts -->
         @vite(['resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-accent-green">
-            <div>
-                <a href="/" class="text-forest-green text-4xl font-bold">
-                    {{ config('app.name', 'Burondwa Farm System') }}
-                </a>
-            </div>
-
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg border-l-4 border-dark-green">
-                {{ $slot }}
-            </div>
+        <div class="min-h-screen bg-gray-100">
+            <main>
+                @yield('content')
+            </main>
         </div>
     </body>
 </html>
