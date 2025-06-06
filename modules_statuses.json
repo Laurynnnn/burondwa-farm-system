@@ -1,0 +1,10 @@
+{
+    "Auth": true,
+    "User": true,
+    "Dashboard": true,
+    "Inventory": true,
+    "Product": true,
+    "Finance": true,
+    "Reports": true,
+    "Settings": true
+}
