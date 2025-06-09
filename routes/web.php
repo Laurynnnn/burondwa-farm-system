@@ -41,20 +41,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('products', ProductController::class);
 
     // Product Categories
-    Route::resource('products/categories', ProductCategoryController::class)->names([
-        'index' => 'product.categories.index',
-        'create' => 'product.categories.create',
-        'store' => 'product.categories.store',
-        'edit' => 'product.categories.edit',
-        'update' => 'product.categories.update',
-        'destroy' => 'product.categories.destroy',
-    ]);
-
-    // Inventory
-    Route::resource('inventory', InventoryController::class);
-    Route::get('inventory/usage', [InventoryController::class, 'usage'])->name('inventory.usage');
-    Route::get('inventory/usage/export', [InventoryController::class, 'exportUsage'])->name('inventory.usage.export');
-    Route::get('inventory/reports', [InventoryController::class, 'reports'])->name('inventory.reports');
+    Route::get('products/categories', [ProductCategoryController::class, 'index'])->name('product.categories.index');
+    Route::get('products/categories/create', [ProductCategoryController::class, 'create'])->name('product.categories.create');
+    Route::post('products/categories', [ProductCategoryController::class, 'store'])->name('product.categories.store');
+    Route::get('products/categories/{category}', [ProductCategoryController::class, 'show'])->name('product.categories.show');
+    Route::get('products/categories/{category}/edit', [ProductCategoryController::class, 'edit'])->name('product.categories.edit');
+    Route::put('products/categories/{category}', [ProductCategoryController::class, 'update'])->name('product.categories.update');
+    Route::delete('products/categories/{category}', [ProductCategoryController::class, 'destroy'])->name('product.categories.destroy');
 
     // Inventory Categories
     Route::resource('inventory/categories', InventoryCategoryController::class)->names([
@@ -76,6 +69,14 @@ Route::middleware('auth')->group(function () {
         'update' => 'inventory.suppliers.update',
         'destroy' => 'inventory.suppliers.destroy',
     ]);
+
+    // Inventory
+    Route::resource('inventory', InventoryController::class);
+    Route::get('inventory/usage', [InventoryController::class, 'usage'])->name('inventory.usage');
+    Route::get('inventory/usage/export', [InventoryController::class, 'exportUsage'])->name('inventory.usage.export');
+    Route::get('inventory/reports', [InventoryController::class, 'reports'])->name('inventory.reports');
+
+    
 });
 
 // Include Breeze authentication routes

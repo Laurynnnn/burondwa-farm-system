@@ -43,6 +43,15 @@ class ProductCategoryController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     */
+    public function show(ProductCategory $category)
+    {
+        $category->loadCount('products');
+        return view('product::categories.show', compact('category'));
+    }
+
+    /**
      * Show the form for editing the specified resource.
      */
     public function edit(ProductCategory $category)

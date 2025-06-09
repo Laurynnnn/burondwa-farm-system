@@ -19,12 +19,12 @@ class InventoryItem extends Model
         'supplier_id',
         'quantity',
         'unit',
-        'minimum_quantity'
+        'reorder_level'
     ];
 
     protected $casts = [
         'quantity' => 'decimal:2',
-        'minimum_quantity' => 'decimal:2'
+        'reorder_level' => 'decimal:2'
     ];
 
     /**

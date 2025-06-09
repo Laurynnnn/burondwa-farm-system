@@ -23,7 +23,7 @@
                                 </tr>
                                 <tr>
                                     <th>Category</th>
-                                    <td>{{ $inventoryItem->category->name }}</td>
+                                    <td>{{ $inventoryItem->category->name ?? 'N/A' }}</td>
                                 </tr>
                                 <tr>
                                     <th>Quantity</th>
@@ -44,14 +44,6 @@
                                 <tr>
                                     <th>Supplier</th>
                                     <td>{{ $inventoryItem->supplier ? $inventoryItem->supplier->name : 'N/A' }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Created At</th>
-                                    <td>{{ $inventoryItem->created_at->format('M d, Y H:i A') }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Last Updated</th>
-                                    <td>{{ $inventoryItem->updated_at->format('M d, Y H:i A') }}</td>
                                 </tr>
                             </table>
                         </div>

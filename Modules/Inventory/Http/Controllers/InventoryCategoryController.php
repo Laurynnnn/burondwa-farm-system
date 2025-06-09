@@ -32,6 +32,15 @@ class InventoryCategoryController extends Controller
             ->with('success', 'Category created successfully.');
     }
 
+    /**
+     * Display the specified resource.
+     */
+    public function show(InventoryCategory $category)
+    {
+        $category->loadCount('inventoryItems');
+        return view('inventory::categories.show', compact('category'));
+    }
+
     public function edit(InventoryCategory $category)
     {
         return view('inventory::categories.edit', compact('category'));
