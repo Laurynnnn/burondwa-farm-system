@@ -6,13 +6,20 @@ use Modules\Product\Http\Controllers\ProductController;
 use Modules\Inventory\Http\Controllers\InventoryController;
 use Modules\Inventory\Http\Controllers\InventoryCategoryController as InventoryCategoryController;
 use Modules\Inventory\Http\Controllers\SupplierController;
-use Modules\Auth\Http\Controllers\AuthController;
 use Modules\Product\Http\Controllers\ProductCategoryController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
 */
 
 // Redirect root to login
@@ -20,18 +27,15 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// Authentication Routes
-Route::middleware('guest')->group(function () {
-    Route::get('login', [AuthController::class, 'login'])->name('login');
-    Route::post('login', [AuthController::class, 'authenticate'])->name('login.authenticate');
-    Route::get('register', [AuthController::class, 'register'])->name('register');
-    Route::post('register', [AuthController::class, 'storeUser'])->name('register.store');
-});
-
-// Protected Routes
+// Protected Routes - combine existing module routes with the new dashboard redirect
 Route::middleware('auth')->group(function () {
-    // Dashboard
+    // Dashboard - using the module controller
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Profile routes (from Breeze)
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Products
     Route::resource('products', ProductController::class);
@@ -72,7 +76,7 @@ Route::middleware('auth')->group(function () {
         'update' => 'inventory.suppliers.update',
         'destroy' => 'inventory.suppliers.destroy',
     ]);
-
-    // Logout
-    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 });
+
+// Include Breeze authentication routes
+require __DIR__.'/auth.php';
