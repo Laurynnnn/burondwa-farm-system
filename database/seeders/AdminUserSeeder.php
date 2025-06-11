@@ -15,11 +15,19 @@ class AdminUserSeeder extends Seeder
             ['email' => 'admin@farm.com'],
             [
                 'name' => 'Admin',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('sysdmin6789'),
+            ]
+        );
+
+        $user = User::firstOrCreate(
+            ['email' => 'tayebwa.tsm@gmail.com'],
+            [
+                'name' => 'Tayebwa',
+                'password' => Hash::make('Incorrect!8'),
             ]
         );
 
         $role = Role::firstOrCreate(['name' => 'admin']);
         $admin->assignRole($role);
     }
-} 
+}
