@@ -88,6 +88,7 @@
                             <li><a href="{{ route('products.index') }}" class="dropdown-item">All Products</a></li>
                             <li><a href="{{ route('products.create') }}" class="dropdown-item">Add Product</a></li>
                             <li><a href="{{ route('product.categories.index') }}" class="dropdown-item">Categories</a></li>
+                            <li><a href="{{ route('product.sales.index') }}" class="dropdown-item">Sales</a></li>
                         </ul>
                     </div>
                 </li>
