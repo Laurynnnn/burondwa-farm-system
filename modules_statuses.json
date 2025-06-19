@@ -6,5 +6,6 @@
     "Product": true,
     "Finance": true,
     "Reports": true,
-    "Settings": true
+    "Settings": true,
+    "GeneralData": true
 }

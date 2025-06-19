@@ -1,0 +1,11 @@
+{
+    "name": "GeneralData",
+    "alias": "generaldata",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\GeneralData\\Providers\\GeneralDataServiceProvider"
+    ],
+    "files": []
+}

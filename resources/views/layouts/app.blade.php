@@ -243,6 +243,11 @@
                         </ul>
                     </div>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('generaldata.index') }}" class="nav-link {{ request()->is('generaldata*') ? 'active' : '' }}">
+                        <i class="fas fa-database"></i> General Data
+                    </a>
+                </li>
             </ul>
         </div>
         <div class="main-content">
