@@ -49,6 +49,22 @@
                         <div class="row mt-3">
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <label for="unit_of_measure_id">Unit of Measure</label>
+                                    <select class="form-control @error('unit_of_measure_id') is-invalid @enderror" id="unit_of_measure_id" name="unit_of_measure_id">
+                                        <option value="">Select Unit</option>
+                                        @foreach($units as $unit)
+                                            <option value="{{ $unit->id }}" {{ old('unit_of_measure_id') == $unit->id ? 'selected' : '' }}>
+                                                {{ $unit->name }} ({{ $unit->abbreviation }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('unit_of_measure_id')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label for="price">Price</label>
                                     <input type="number" step="0.01" class="form-control @error('price') is-invalid @enderror" 
                                            id="price" name="price" value="{{ old('price') }}" required>
@@ -57,6 +73,9 @@
                                     @enderror
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="row mt-3">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="status">Status</label>

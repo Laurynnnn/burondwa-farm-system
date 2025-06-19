@@ -15,11 +15,17 @@ class Product extends Model
         'description',
         'price',
         'category_id',
-        'status'
+        'status',
+        'unit_of_measure_id',
     ];
 
     public function category()
     {
         return $this->belongsTo(ProductCategory::class, 'category_id');
+    }
+
+    public function unitOfMeasure()
+    {
+        return $this->belongsTo(\Modules\GeneralData\Models\UnitOfMeasure::class, 'unit_of_measure_id');
     }
 } 

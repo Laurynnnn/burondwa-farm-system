@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\Product\Models\Product;
 use Modules\Product\Models\ProductCategory;
+use Modules\GeneralData\Models\UnitOfMeasure;
 
 class ProductController extends Controller
 {
@@ -24,7 +25,8 @@ class ProductController extends Controller
     public function create()
     {
         $categories = ProductCategory::all();
-        return view('product::create', compact('categories'));
+        $units = UnitOfMeasure::orderBy('name')->get();
+        return view('product::create', compact('categories', 'units'));
     }
 
     /**
@@ -37,7 +39,8 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:product_categories,id',
-            'status' => 'required|in:active,inactive'
+            'status' => 'required|in:active,inactive',
+            'unit_of_measure_id' => 'nullable|exists:units_of_measure,id',
         ]);
 
         Product::create($validated);
@@ -60,7 +63,8 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = ProductCategory::all();
-        return view('product::edit', compact('product', 'categories'));
+        $units = UnitOfMeasure::orderBy('name')->get();
+        return view('product::edit', compact('product', 'categories', 'units'));
     }
 
     /**
@@ -73,7 +77,8 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:product_categories,id',
-            'status' => 'required|in:active,inactive'
+            'status' => 'required|in:active,inactive',
+            'unit_of_measure_id' => 'nullable|exists:units_of_measure,id',
         ]);
 
         $product->update($validated);
