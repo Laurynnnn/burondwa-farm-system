@@ -51,13 +51,18 @@ Route::middleware('auth')->group(function () {
     Route::delete('products/categories/{category}', [ProductCategoryController::class, 'destroy'])->name('product.categories.destroy');
 
     // Product Sales
-    Route::get('products/sales', [SalesController::class, 'index'])->name('product.sales.index');
+    Route::get('products/sales/index', [SalesController::class, 'index'])->name('product.sales.index');
     Route::get('products/sales/create', [SalesController::class, 'create'])->name('product.sales.create');
     Route::post('products/sales', [SalesController::class, 'store'])->name('product.sales.store');
     Route::get('products/sales/{sale}', [SalesController::class, 'show'])->name('product.sales.show');
     Route::get('products/sales/{sale}/edit', [SalesController::class, 'edit'])->name('product.sales.edit');
     Route::put('products/sales/{sale}', [SalesController::class, 'update'])->name('product.sales.update');
     Route::delete('products/sales/{sale}', [SalesController::class, 'destroy'])->name('product.sales.destroy');
+
+    // Product Stock
+    Route::get('products/stock/sheet', [ProductController::class, 'stockSheet'])->name('product.stock.sheet');
+    Route::get('products/stock/add', [ProductController::class, 'stockEntryForm'])->name('product.stock.add');
+    Route::post('products/stock/add', [ProductController::class, 'storeStockEntry'])->name('product.stock.add');
 
     // Inventory Categories
     Route::resource('inventory/categories', InventoryCategoryController::class)->names([

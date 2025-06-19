@@ -10,10 +10,13 @@
             <a href="{{ route('product.sales.index') }}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Back to Sales
             </a>
+            <button onclick="window.print()" class="btn btn-success ms-2">
+                <i class="fas fa-print"></i> Print Receipt
+            </button>
         </div>
     </div>
 
-    <div class="card">
+    <div class="card printable-receipt">
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
@@ -103,4 +106,15 @@
         </div>
     </div>
 </div>
-@endsection 
+@endsection
+
+@push('styles')
+<style>
+@media print {
+    body * { visibility: hidden; }
+    .printable-receipt, .printable-receipt * { visibility: visible; }
+    .printable-receipt { position: absolute; left: 0; top: 0; width: 100%; background: #fff; }
+    .no-print { display: none !important; }
+}
+</style>
+@endpush 

@@ -2,9 +2,10 @@
 
 namespace Modules\Product\Models;
 
+use StockMovement;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
@@ -27,5 +28,10 @@ class Product extends Model
     public function unitOfMeasure()
     {
         return $this->belongsTo(\Modules\GeneralData\Models\UnitOfMeasure::class, 'unit_of_measure_id');
+    }
+
+    public function stockMovements()
+    {
+        return $this->hasMany(\Modules\Product\Models\StockMovement::class, 'product_id');
     }
 } 

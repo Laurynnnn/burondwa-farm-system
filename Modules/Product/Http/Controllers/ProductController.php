@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Modules\Product\Models\Product;
 use Modules\Product\Models\ProductCategory;
 use Modules\GeneralData\Models\UnitOfMeasure;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -96,5 +97,61 @@ class ProductController extends Controller
 
         return redirect()->route('products.index')
             ->with('success', 'Product deleted successfully.');
+    }
+
+    /**
+     * Display a stock sheet for all products.
+     */
+    public function stockSheet()
+    {
+        $products = Product::with('category', 'unitOfMeasure')->get();
+        return view('product::stock.sheet', compact('products'));
+    }
+
+    /**
+     * Show the form for adding stock to a product.
+     */
+    public function stockEntryForm()
+    {
+        $products = Product::where('status', 'active')->get();
+        return view('product::stock.add', compact('products'));
+    }
+
+    /**
+     * Store a new stock entry and log the movement.
+     */
+    public function storeStockEntry(Request $request)
+    {
+        $validated = $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|numeric|min:0.01',
+            'package_unit' => 'nullable|string|max:255',
+            'price_per_unit' => 'required|numeric|min:0',
+            'expiry_date' => 'nullable|date',
+        ]);
+
+        $product = Product::findOrFail($validated['product_id']);
+        $total = $validated['quantity'] * $validated['price_per_unit'];
+
+        // Update product stock
+        $product->increment('stock', $validated['quantity']);
+
+        // Log stock movement
+        DB::table('stock_movements')->insert([
+            'product_id' => $product->id,
+            'quantity' => $validated['quantity'],
+            'movement_type' => 'in',
+            'user_id' => $request->user()->id,
+            'package_unit' => $validated['package_unit'] ?? null,
+            'price_per_unit' => $validated['price_per_unit'],
+            'total' => $total,
+            'expiry_date' => $validated['expiry_date'] ?? null,
+            'reference_type' => 'manual',
+            'reference_id' => null,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return redirect()->route('product.stock.sheet')->with('success', 'Stock added successfully.');
     }
 }

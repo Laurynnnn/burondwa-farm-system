@@ -226,7 +226,8 @@
                             <li><a href="{{ route('products.index') }}" class="dropdown-item"><i class="fas fa-list-ul"></i> All Products</a></li>
                             <li><a href="{{ route('products.create') }}" class="dropdown-item"><i class="fas fa-plus-circle"></i> Add Product</a></li>
                             <li><a href="{{ route('product.categories.index') }}" class="dropdown-item"><i class="fas fa-tags"></i> Categories</a></li>
-                            <li><a href="{{ route('product.sales.index') }}" class="dropdown-item">Sales</a></li>
+                            <li><a href="{{ route('product.sales.index') }}" class="dropdown-item"><i class="fas fa-cash-register"></i> Sales</a></li>
+                            <li><a href="{{ route('product.stock.sheet') }}" class="dropdown-item"><i class="fas fa-clipboard-list"></i> Stock Sheet</a></li>
                         </ul>
                     </div>
                 </li>

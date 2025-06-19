@@ -51,12 +51,7 @@
 
                         <div class="mb-3">
                             <label for="unit_price" class="form-label">Unit Price</label>
-                            <input type="number" step="0.01" min="0" name="unit_price" id="unit_price" 
-                                class="form-control @error('unit_price') is-invalid @enderror" 
-                                value="{{ old('unit_price', $sale->unit_price) }}" required>
-                            @error('unit_price')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <input type="number" step="0.01" min="0" name="unit_price" id="unit_price" class="form-control" readonly value="{{ old('unit_price', $sale->unit_price) }}">
                         </div>
 
                         <div class="mb-3">
@@ -151,11 +146,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (selectedOption.value) {
             unitPriceInput.value = selectedOption.dataset.price;
             calculateTotal();
+        } else {
+            unitPriceInput.value = '';
+            totalAmountInput.value = '';
         }
     });
 
     quantityInput.addEventListener('input', calculateTotal);
-    unitPriceInput.addEventListener('input', calculateTotal);
 });
 </script>
 @endpush

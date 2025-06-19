@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreign('unit_of_measure_id')
                 ->references('id')->on('units_of_measure')
                 ->onDelete('set null');
+            $table->softDeletes();
         });
     }
 

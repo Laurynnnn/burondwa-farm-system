@@ -68,6 +68,22 @@ class SalesController extends Controller
             // Update product stock
             $product->decrement('stock', $validated['quantity']);
 
+            // Log stock movement (out)
+            DB::table('stock_movements')->insert([
+                'product_id' => $product->id,
+                'quantity' => $validated['quantity'],
+                'movement_type' => 'out',
+                'user_id' => Auth::id(),
+                'package_unit' => null,
+                'price_per_unit' => $validated['unit_price'],
+                'total' => $validated['total_amount'],
+                'expiry_date' => null,
+                'reference_type' => 'sale',
+                'reference_id' => $sale->id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
             DB::commit();
 
             return redirect()->route('product.sales.index')
@@ -136,6 +152,22 @@ class SalesController extends Controller
                 $product->increment('stock', $stockDifference);
             }
 
+            // Log stock movement (out) for updated sale
+            DB::table('stock_movements')->insert([
+                'product_id' => $product->id,
+                'quantity' => $validated['quantity'],
+                'movement_type' => 'out',
+                'user_id' => Auth::id(),
+                'package_unit' => null,
+                'price_per_unit' => $validated['unit_price'],
+                'total' => $validated['total_amount'],
+                'expiry_date' => null,
+                'reference_type' => 'sale',
+                'reference_id' => $sale->id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
             DB::commit();
 
             return redirect()->route('product.sales.index')
@@ -156,6 +188,22 @@ class SalesController extends Controller
 
             // Return the stock to the product
             $sale->product->increment('stock', $sale->quantity);
+
+            // Log stock movement (in) for returned stock
+            DB::table('stock_movements')->insert([
+                'product_id' => $sale->product_id,
+                'quantity' => $sale->quantity,
+                'movement_type' => 'in',
+                'user_id' => Auth::id(),
+                'package_unit' => null,
+                'price_per_unit' => $sale->unit_price,
+                'total' => $sale->total_amount,
+                'expiry_date' => null,
+                'reference_type' => 'sale_delete',
+                'reference_id' => $sale->id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
             // Delete the sale
             $sale->delete();

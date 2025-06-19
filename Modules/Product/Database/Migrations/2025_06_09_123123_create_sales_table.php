@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('payment_method')->default('cash');
             $table->string('payment_status')->default('paid');
             $table->foreignId('created_by')->constrained('users');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
