@@ -9,6 +9,8 @@ use Modules\Inventory\Models\InventoryCategory;
 use Modules\Inventory\Models\InventoryUsage;
 use Modules\Product\Models\Product;
 use Illuminate\Support\Facades\DB;
+use Modules\Product\Models\ProductCategory;
+use Modules\Product\Models\Sales;
 
 class DashboardController extends Controller
 {
@@ -56,6 +58,42 @@ class DashboardController extends Controller
             ->orderBy('month')
             ->get();
 
+        // Get product stock data
+        $productStockData = Product::select('name', 'stock')->get();
+
+        // Get top selling products (by total quantity sold)
+        $topSellingProducts = Product::select('name', DB::raw('SUM(stock) as total_sold'))
+            ->groupBy('name')
+            ->orderByDesc('total_sold')
+            ->limit(10)
+            ->get()
+            ->map(function($row) {
+                return [
+                    'name' => $row->name,
+                    'total_sold' => $row->total_sold
+                ];
+            });
+
+        // Get low stock products using reorder_level
+        $lowStockItems = Product::whereColumn('stock', '<=', 'reorder_level')->count();
+        $lowStockItemsList = Product::with('category')
+            ->whereColumn('stock', '<=', 'reorder_level')
+            ->get();
+
+        // Category breakdown: for each product category, get total in stock and total sold
+        $categoryBreakdownData = ProductCategory::with('products')
+            ->get()
+            ->map(function ($category) {
+                $productIds = $category->products->pluck('id');
+                $totalStock = $category->products->sum('stock');
+                $totalSold = Sales::whereIn('product_id', $productIds)->sum('quantity');
+                return [
+                    'category' => $category->name,
+                    'total_stock' => $totalStock,
+                    'total_sold' => $totalSold,
+                ];
+            });
+
         return view('dashboard::index', compact(
             'totalProducts',
             'totalInventoryItems',
@@ -63,7 +101,10 @@ class DashboardController extends Controller
             'totalCategories',
             'categoryDistribution',
             'lowStockItemsList',
-            'monthlyUsage'
+            'monthlyUsage',
+            'productStockData',
+            'topSellingProducts',
+            'categoryBreakdownData'
         ));
     }
 

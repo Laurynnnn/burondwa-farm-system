@@ -68,9 +68,19 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="price">Price</label>
-                                    <input type="number" step="0.01" class="form-control @error('price') is-invalid @enderror" 
+                                    <input type="number" step="0.01" min="0" class="form-control @error('price') is-invalid @enderror" 
                                            id="price" name="price" value="{{ old('price', $product->price) }}" required>
                                     @error('price')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="reorder_level">Reorder Level</label>
+                                    <input type="number" step="0.01" min="0" class="form-control @error('reorder_level') is-invalid @enderror" 
+                                           id="reorder_level" name="reorder_level" value="{{ old('reorder_level', $product->reorder_level) }}" required>
+                                    @error('reorder_level')
                                         <span class="invalid-feedback">{{ $message }}</span>
                                     @enderror
                                 </div>

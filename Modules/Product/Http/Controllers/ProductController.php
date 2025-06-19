@@ -42,6 +42,7 @@ class ProductController extends Controller
             'category_id' => 'required|exists:product_categories,id',
             'status' => 'required|in:active,inactive',
             'unit_of_measure_id' => 'nullable|exists:units_of_measure,id',
+            'reorder_level' => 'required|numeric|min:0',
         ]);
 
         Product::create($validated);
@@ -80,6 +81,7 @@ class ProductController extends Controller
             'category_id' => 'required|exists:product_categories,id',
             'status' => 'required|in:active,inactive',
             'unit_of_measure_id' => 'nullable|exists:units_of_measure,id',
+            'reorder_level' => 'required|numeric|min:0',
         ]);
 
         $product->update($validated);

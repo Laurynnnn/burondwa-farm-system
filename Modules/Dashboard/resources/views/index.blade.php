@@ -113,7 +113,7 @@
                                 <tr>
                                     <th>Item</th>
                                     <th>Category</th>
-                                    <th>Quantity</th>
+                                    <th>Stock</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -122,7 +122,7 @@
                                     <tr>
                                         <td>{{ $item->name }}</td>
                                         <td>{{ $item->category->name ?? '-' }}</td>
-                                        <td>{{ $item->quantity }}</td>
+                                        <td>{{ $item->stock }}</td>
                                     </tr>
                                     @endforeach
                                 @else
@@ -142,69 +142,62 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-// Chart Data (Static for now)
+// Dynamic Chart Data from Controller
 const inventoryDistributionData = {
-    labels: ['Seeds', 'Fertilizer', 'Pesticides', 'Tools'],
+    labels: @json($categoryDistribution->pluck('name')),
     datasets: [{
-        data: [12, 19, 7, 5],
+        data: @json($categoryDistribution->pluck('count')),
         backgroundColor: [
-            'rgba(76, 175, 80, 0.7)', // Green
-            'rgba(33, 150, 243, 0.7)', // Blue
-            'rgba(255, 193, 7, 0.7)', // Yellow
-            'rgba(244, 67, 54, 0.7)'  // Red
-        ],
-        borderColor: [
-            'rgba(76, 175, 80, 1)',
-            'rgba(33, 150, 243, 1)',
-            'rgba(255, 193, 7, 1)',
-            'rgba(244, 67, 54, 1)'
+            'rgba(76, 175, 80, 0.7)',
+            'rgba(33, 150, 243, 0.7)',
+            'rgba(255, 193, 7, 0.7)',
+            'rgba(244, 67, 54, 0.7)',
+            'rgba(255, 99, 132, 0.7)',
+            'rgba(54, 162, 235, 0.7)',
+            'rgba(255, 205, 86, 0.7)',
+            'rgba(75, 192, 192, 0.7)'
         ],
         borderWidth: 1
     }]
 };
 
 const monthlyUsageData = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    labels: @json($monthlyUsage->map(fn($row) => $row->month . '-' . $row->year)),
     datasets: [{
         label: 'Usage',
-        data: [30, 45, 28, 60, 40, 55],
+        data: @json($monthlyUsage->pluck('total_quantity')),
         backgroundColor: 'rgba(33, 150, 243, 0.7)',
         borderColor: 'rgba(33, 150, 243, 1)',
         borderWidth: 1
     }]
 };
 
-const stockTrendsData = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+const productStockData = {
+    labels: @json($productStockData->pluck('name')),
     datasets: [{
         label: 'Stock Level',
-        data: [150, 140, 160, 155, 170, 165],
+        data: @json($productStockData->pluck('stock')),
+        backgroundColor: 'rgba(76, 175, 80, 0.7)',
         borderColor: 'rgba(76, 175, 80, 1)',
-        backgroundColor: 'rgba(76, 175, 80, 0.2)',
-        fill: true,
-        tension: 0.4
-    }]
-};
-
-const categoryBreakdownData = {
-    labels: ['Produce', 'Livestock', 'Supplies', 'Equipment'],
-    datasets: [{
-        data: [40, 25, 20, 15],
-         backgroundColor: [
-            'rgba(255, 99, 132, 0.7)',
-            'rgba(54, 162, 235, 0.7)',
-            'rgba(255, 205, 86, 0.7)',
-            'rgba(75, 192, 192, 0.7)'
-        ],
-         borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 205, 86, 1)',
-            'rgba(75, 192, 192, 1)'
-        ],
         borderWidth: 1
     }]
 };
+
+const topSellingProductsData = {
+    labels: @json($topSellingProducts->pluck('name')),
+    datasets: [{
+        label: 'Total Sold',
+        data: @json($topSellingProducts->pluck('total_sold')),
+        backgroundColor: 'rgba(255, 193, 7, 0.7)',
+        borderColor: 'rgba(255, 193, 7, 1)',
+        borderWidth: 1
+    }]
+};
+
+const categoryBreakdownData = @json($categoryBreakdownData);
+const categoryLabels = categoryBreakdownData.map(row => row.category);
+const categoryStock = categoryBreakdownData.map(row => row.total_stock);
+const categorySold = categoryBreakdownData.map(row => row.total_sold);
 
 // Render Charts
 new Chart(document.getElementById('inventoryPieChart').getContext('2d'), {
@@ -220,17 +213,38 @@ new Chart(document.getElementById('usageBarChart').getContext('2d'), {
 });
 
 new Chart(document.getElementById('stockLineChart').getContext('2d'), {
-    type: 'line',
-    data: stockTrendsData,
+    type: 'bar',
+    data: productStockData,
     options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
 });
 
 new Chart(document.getElementById('categoryDoughnutChart').getContext('2d'), {
-    type: 'doughnut',
-    data: categoryBreakdownData,
-    options: { responsive: true, maintainAspectRatio: false }
+    type: 'bar',
+    data: {
+        labels: categoryLabels,
+        datasets: [
+            {
+                label: 'Total In Stock',
+                data: categoryStock,
+                backgroundColor: 'rgba(33, 150, 243, 0.7)',
+                borderColor: 'rgba(33, 150, 243, 1)',
+                borderWidth: 1
+            },
+            {
+                label: 'Total Sold',
+                data: categorySold,
+                backgroundColor: 'rgba(255, 193, 7, 0.7)',
+                borderColor: 'rgba(255, 193, 7, 1)',
+                borderWidth: 1
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: { y: { beginAtZero: true } }
+    }
 });
-
 </script>
 @endpush
 @endsection

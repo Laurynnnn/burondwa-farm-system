@@ -15,6 +15,8 @@ class Product extends Model
         'name',
         'description',
         'price',
+        'stock',
+        'reorder_level',
         'category_id',
         'status',
         'unit_of_measure_id',
